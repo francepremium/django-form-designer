@@ -1,5 +1,3 @@
-from importlib import import_module
-
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -7,6 +5,12 @@ from django.core.urlresolvers import reverse
 from picklefield.fields import PickledObjectField
 from polymodels.models import PolymorphicModel
 from crispy_forms.layout import Layout, Fieldset
+
+from utils import import_class
+
+
+__all__ = ['Form', 'Tab', 'Widget',
+    'InputWidget', 'TextareaWidget', 'ChoiceWidget']
 
 
 class Form(models.Model):
@@ -41,6 +45,9 @@ class Form(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_update_url(self):
+        return reverse('form_designer_form_update', args=(self.pk,))
 
     class Meta:
         ordering = ('name',)
@@ -87,18 +94,11 @@ class Widget(PolymorphicModel):
     required = models.BooleanField()
     order = models.IntegerField()
 
-    def _import(self, path):
-        bits = path.split('.')
-        module = bits[:-1]
-        cls = bits[-1]
-        module = import_module(module)
-        return getattr(module, cls)
-
     def field_class(self):
-        return self._import(self.field_class)
+        return import_class(self.field_class)
 
     def widget_class(self):
-        return self._import(self.widget_class)
+        return import_class(self.widget_class)
 
     def field_kwargs(self):
         return {
@@ -117,6 +117,13 @@ class Widget(PolymorphicModel):
 
     def __unicode__(self):
         return self.verbose_name
+
+    def update_url(self):
+        return reverse('form_designer_widget_update', args=(self.pk,))
+
+    @classmethod
+    def create_url(self):
+        return reverse('form_designer_widget_create')
 
 
 class InputWidget(Widget):

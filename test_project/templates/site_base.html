@@ -1,0 +1,14 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
+    <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tab.js"></script>
+
+    {% block extra_head %}
+    {% endblock %}
+    {% block body %}
+    {% endblock %}
+    {% block extra_body %}
+    {% endblock %}
+{% endblock %}

@@ -1,8 +1,10 @@
 from django.conf.urls import patterns, include, url
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+
+js_info_dict = {
+    'packages': ('form_designer',),
+}
+
 
 urlpatterns = patterns('',
     # Examples:
@@ -14,4 +16,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+    url(r'^form_designer/', include('form_designer.urls')),
+    url(r'^auth/', include('django.contrib.auth.urls')),
+    (r'^jsi18n/$', 'django.views.i18n.javascript_catalog',
+        {'packages': ('form_designer',)}),
 )
