@@ -89,7 +89,7 @@ window.yourlabs.FormUpdate = function(options) {
             });
         });
 
-        $('ul.nav-tabs .remove').live('click', function() {
+        $('.nav-tabs .remove').live('click', function() {
             var data = $(this).parents('li').data('tab');
             $('#delete-tab .tab-name').html(data.verbose_name);
             $('#delete-tab').data('tab-pk', data.pk);
@@ -104,13 +104,19 @@ window.yourlabs.FormUpdate = function(options) {
                 async: false,
                 type: 'post',
                 data: data,
-                dataType: 'json',
-                success: function(responseData, textStatus, jqXHR) {
-                    console.log(textStatus)
+                success: function() {
                     $('div#tab-' + data.pk).remove();
                     $('a[href=#tab-' + data.pk + ']').remove();
                     $('#delete-tab').modal('hide');
                 },
+            });
+        });
+
+        $('.nav-tabs .name').live('focusout', function() {
+            var data = $(this).parents('li').data('tab');
+            $.post(formUpdate.options.tabUpdateUrl, {
+                pk: data.pk,
+                name: $(this).html(),
             });
         });
     };

@@ -62,11 +62,14 @@ class TabDeleteView(PkUrlKwarg, TabSecurity, AjaxDeleteView):
     pass
 
 
-class TabUpdateView(PkUrlKwarg, TabCreateView, generic.DetailView):
+class TabUpdateView(PkUrlKwarg, TabSecurity, generic.DetailView):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        pass
+        tab = self.get_object()
+        tab.name = request.POST['name']
+        tab.save()
+        return http.HttpResponse(status=204)
 
 
 class FormCreateView(generic.CreateView):
