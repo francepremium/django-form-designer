@@ -12,6 +12,7 @@ from crispy_forms.layout import Layout, Fieldset
 class Form(models.Model):
     name = models.CharField(max_length=200)
     verbose_name = models.CharField(max_length=200)
+    author = models.ForeignKey('auth.User')
 
     def to_crispy(self):
         layout = Layout()
