@@ -57,6 +57,10 @@ class Tab(models.Model):
     name = models.CharField(max_length=200)
     verbose_name = models.CharField(max_length=200)
     form = models.ForeignKey(Form)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ('order',)
 
     def to_crispy(self):
         fieldset = Fieldset(self.name)
