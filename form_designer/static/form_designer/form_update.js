@@ -123,6 +123,20 @@ window.yourlabs.FormUpdate = function(options) {
                 name: $(this).html(),
             });
         });
+
+        $('.nav-tabs').sortable({
+            axis: 'x',
+            handle: '.handle',
+            items: 'li:not(.new-tab)',
+            stop: function(e, ui) {
+                var pks=[];
+                $('.nav-tabs li:not(.new-tab)').each(function() {
+                    pks.push($(this).data('tab').pk);
+                });
+                console.log(pks)
+                $.post(formUpdate.options.formUpdateUrl, {tabs: pks});
+            },
+        });
     };
 
     this.currentTabContent = function() {

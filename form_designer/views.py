@@ -103,6 +103,16 @@ class FormUpdateView(generic.DetailView):
             'form': self.get_object(),
         }
 
+    def post(self, request, *args, **kwargs):
+        if 'tabs' in request.POST.keys():
+            i = 0
+            for pk in request.POST.getlist('tabs'):
+                print self.get_object().tab_set.filter(pk=pk)
+                print i
+                self.get_object().tab_set.filter(pk=pk).update(order=i)
+                i += 1
+
+        return http.HttpResponse(status=204)
 
 class WidgetCreateView(generic.CreateView):
     form_class = CreateForm

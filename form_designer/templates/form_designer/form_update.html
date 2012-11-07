@@ -19,6 +19,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var formUpdate = new yourlabs.FormUpdate({
+        formUpdateUrl: '{{ request.path }}',
         widgetCreateUrl: '{% url 'form_designer_widget_create' %}',
         widgetUpdateUrl: '{% url 'form_designer_widget_update' 0 %}',
         widgetDeleteUrl: '{% url 'form_designer_widget_delete' 0 %}',
