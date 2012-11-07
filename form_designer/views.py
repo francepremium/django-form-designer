@@ -1,5 +1,6 @@
 import json
 
+from django.template import defaultfilters
 from django import http
 from django.utils.translation import ugettext as _
 from django.views import generic
@@ -67,7 +68,8 @@ class TabUpdateView(PkUrlKwarg, TabSecurity, generic.DetailView):
 
     def post(self, request, *args, **kwargs):
         tab = self.get_object()
-        tab.name = request.POST['name']
+        tab.verbose_name = defaultfilters.striptags(request.POST['name']).strip(
+            ).replace('&nbsp;', '')
         tab.save()
         return http.HttpResponse(status=204)
 
