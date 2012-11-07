@@ -3,6 +3,10 @@ if (window.yourlabs == undefined) window.yourlabs = {};
 
 if (window.yourlabs.FormUpdate != undefined) console.log('form_update.js already loaded');
 
+// Make jquery behave according to standards, which are compatible
+// with django, else it would use PHP's implementration
+$.ajaxSettings.traditional = true;
+
 window.yourlabs.FormUpdate = function(options) {
     this.form = [];
     this.modal = $('#field-configuration');
