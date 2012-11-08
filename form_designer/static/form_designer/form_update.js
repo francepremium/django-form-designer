@@ -138,6 +138,8 @@ window.yourlabs.FormUpdate = function(options) {
                     $('#new-tab input[type=text]').val('');
                     $('#new-tab .help-inline').remove();
                     $('#new-tab .error').removeClass('error');
+
+                    $('.nav-tabs li:not(.new-tab):last a').click();
                 },
             });
         });
