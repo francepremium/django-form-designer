@@ -33,6 +33,11 @@ class AjaxDeleteView(generic.DeleteView):
         self.object.delete()
         return http.HttpResponse('', status=204)
 
+class AjaxFormMixin(object):
+    def form_valid(self, form):
+        self.object = form.save()
+        return http.HttpResponse(self.object.pk, status=201)
+
 
 class TabSecurity(object):
     """
@@ -119,28 +124,34 @@ class FormUpdateView(generic.DetailView):
         return http.HttpResponse(status=204)
 
 
-class WidgetCreateView(generic.CreateView):
-    template_name = 'form_designer/widget_form.html'
-    form_class = WidgetForm
-
+class WidgetFormMixin(object):
     def get_form(self, form_class):
         if self.request.GET['widget_class'] not in WIDGET_CLASSES:
             return
 
         widget_class = import_class(self.request.GET['widget_class'])
 
-        widget = widget_class(tab=Tab.objects.get(  # basic security for now
+        self.object = widget_class(tab=Tab.objects.get(  # basic security for now
             pk=self.request.GET['tab_id'], form__author=self.request.user))
 
-        return widget.configuration_form_instance(self.request)
+        return self.object.configuration_form_instance(self.request)
 
-    def form_valid(self, form):
-        self.object = form.save()
-        return http.HttpResponse(self.object.pk, status=201)
+    def get_template_names(self):
+        widget_name = self.object.__class__.__name__
+
+        return [
+            'form_designer/widget_forms/%s.html' % widget_name,
+            'form_designer/widget_form.html',
+        ]
 
 
-class WidgetUpdateView(generic.UpdateView):
-    form_class = WidgetForm
+
+class WidgetCreateView(WidgetFormMixin, AjaxFormMixin, generic.CreateView):
+    form_class = WidgetForm  # overridden by WidgetFormMixin
+
+
+class WidgetUpdateView(WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
+    form_class = WidgetForm  # overridden by WidgetFormMixin
 
 
 class WidgetDeleteView(generic.DeleteView):
