@@ -131,7 +131,7 @@ class Widget(PolymorphicModel):
 
 
 class InputWidget(Widget):
-    max_length = models.IntegerField()
+    max_length = models.IntegerField(default=255)
     field_class = 'django.forms.fields.CharField'
     widget_class = 'django.forms.widgets.InputWidget'
 
