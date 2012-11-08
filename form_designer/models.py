@@ -94,7 +94,7 @@ class Widget(PolymorphicModel):
     tab = models.ForeignKey(Tab)
     name = models.CharField(max_length=200)
     verbose_name = models.CharField(max_length=200)
-    help_text = models.TextField()
+    help_text = models.TextField(blank=True)
     required = models.BooleanField()
     order = models.IntegerField()
 
