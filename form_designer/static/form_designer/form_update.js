@@ -31,11 +31,9 @@ window.yourlabs.FormUpdate = function(options) {
             if (e.which == 27) { // esc
                 $('.modal .close').click();
             }
-        });
-
-        $('.modal').keypress(function(e) {
-            if (e.which == 13) // enter
-                $(this).find('.save').click();
+            if (e.which == 13) { // enter
+                $('.modal:visible').find('.save').click();
+            }
         });
 
         $('.modal .cancel').click(function() {
