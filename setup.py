@@ -48,6 +48,7 @@ setup(
         'django',
         'django-polymodels',
         'django-picklefield',
+        'django-forms-bootstrap',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

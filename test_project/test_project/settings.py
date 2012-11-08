@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'form_designer',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
+    'django_forms_bootstrap',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
