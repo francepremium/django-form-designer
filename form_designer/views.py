@@ -89,7 +89,9 @@ class FormCreateView(generic.CreateView):
 
 class FormUpdateView(generic.DetailView):
     template_name = 'form_designer/form_update.html'
-    model = Form
+
+    def get_queryset(self):
+        return Form.objects.filter(author=self.request.user)
 
     def get_context_data(self, *args, **kwargs):
         widget_classes = {}
