@@ -8,7 +8,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django import shortcuts
 from django.template.defaultfilters import slugify
 
-from forms import FormCreateForm, CreateForm, WidgetUpdateForm
+from forms import FormCreateForm, CreateForm, WidgetForm
 from utils import import_class
 from models import *
 from settings import WIDGET_CLASSES
@@ -116,18 +116,36 @@ class FormUpdateView(generic.DetailView):
 
         return http.HttpResponse(status=204)
 
-class WidgetCreateView(generic.CreateView):
-    form_class = CreateForm
 
-    def get_form_class(self):
-        form_class = super(WidgetCreateView, self).get_form_class()
-        form_class.model_class = import_class(request.GET['widget_class'])
-        assert issubclass(form_class.model_class, Widget)
-        return form_class
+class WidgetCreateView(generic.CreateView):
+    template_name = 'form_designer/widget_form.html'
+    form_class = WidgetForm
+
+    def get_form(self, form_class):
+        if self.request.GET['widget_class'] not in WIDGET_CLASSES:
+            return
+
+        widget_class = import_class(self.request.GET['widget_class'])
+
+        widget = widget_class(tab=Tab.objects.get(  # basic security for now
+            pk=self.request.GET['tab_id'], form__author=self.request.user))
+
+        if hasattr(widget_class, 'get_configuration_form'):
+            form = widget.get_configuration_form(self)
+        else:
+            kwargs = self.get_form_kwargs()
+            kwargs.update({'instance': widget})
+            form = WidgetForm(**kwargs)
+
+        return form
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return http.HttpResponse(self.object.pk, status=201)
 
 
 class WidgetUpdateView(generic.UpdateView):
-    form_class = WidgetUpdateForm
+    form_class = WidgetForm
 
 
 class WidgetDeleteView(generic.DeleteView):

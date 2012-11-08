@@ -130,64 +130,55 @@ $(document).ready(function() {
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 class="title">Title</h3>
     </div>
-    <div class="modal-body">
-        <form>
-            <label>{% trans 'Name' %}</label>
-            <input type="text" placeholder="{% trans 'Type the field name here' %}" name="name"/>
-            <span class="help-block">{% trans 'Field display name' %}</span>
 
-            <label>{% trans 'Help text' %}</label>
-            <span class="help-block">{% trans 'Long text that describes the field' %}</span>
-            <textarea name="help_text"></textarea>
-
-            <label class="checkbox">
-                <input type="checkbox" name="required" /> {% trans 'Is this field required ?' %}
-            </label>
-            <span class="help-block">{% trans 'If this field is required, everybody with permission to use this form will have the permission to change it' %}.</span>
-
-            <div class="extra-form">
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <a style="float:left" href="#" class="btn cancel btn-danger">{% trans 'Delete field' %}</a>
-        <a href="#" class="btn save btn-primary">{% trans 'Save' %}</a>
-    </div>
-</div>
-
-
-<div class="modal hide fade" id="new-tab">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 class="title">{% trans 'Create tab' %}</h3>
-    </div>
-    <div class="modal-body">
-        <div class="control-group">
-            <label>{% trans 'Title' %}</label>
-            <div class="controls">
-                <input type="text" placeholder="{% trans 'Type the tab title here' %}" name="verbose_name"/>
-                <span class="help-block">{% trans 'You will then be able to change it by clicking on the tab title in the form editor.' %}</span>
-            </div>
+    <div class="modal hide fade" id="field-configuration">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="title">Title</h3>
+        </div>
+        <div class="modal-body">
+            <form>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a style="float:left" href="#" class="btn cancel btn-danger">{% trans 'Cancel' %}</a>
+            <a href="#" class="btn save btn-primary">{% trans 'Save' %}</a>
         </div>
     </div>
-    <div class="modal-footer">
-        <a style="float:left" href="#" class="btn cancel btn-danger">{% trans 'Cancel' %}</a>
-        <a href="#" class="btn save btn-primary">{% trans 'Create' %}</a>
-    </div>
-</div>
 
-<div class="modal hide fade" id="delete-tab">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 class="title">{% trans 'Delete tab' %}</h3>
+
+    <div class="modal hide fade" id="new-tab">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="title">{% trans 'Create tab' %}</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <label>{% trans 'Title' %}</label>
+                <div class="controls">
+                    <input type="text" placeholder="{% trans 'Type the tab title here' %}" name="verbose_name"/>
+                    <span class="help-block">{% trans 'You will then be able to change it by clicking on the tab title in the form editor.' %}</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a style="float:left" href="#" class="btn cancel btn-danger">{% trans 'Cancel' %}</a>
+            <a href="#" class="btn save btn-primary">{% trans 'Create' %}</a>
+        </div>
     </div>
-    <div class="modal-body">
-        <p>{% trans 'Are you sure you want to delete tab' %} <span class="tab-name"></span> ?</p>
+
+    <div class="modal hide fade" id="delete-tab">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="title">{% trans 'Delete tab' %}</h3>
+        </div>
+        <div class="modal-body">
+            <p>{% trans 'Are you sure you want to delete tab' %} <span class="tab-name"></span> ?</p>
+        </div>
+        <div class="modal-footer">
+            <a style="float:left" href="#" data-dismiss="modal" class="btn cancel btn-danger">{% trans 'Cancel' %}</a>
+            <a href="#" class="btn save btn-primary">{% trans 'Delete' %}</a>
+        </div>
     </div>
-    <div class="modal-footer">
-        <a style="float:left" href="#" data-dismiss="modal" class="btn cancel btn-danger">{% trans 'Cancel' %}</a>
-        <a href="#" class="btn save btn-primary">{% trans 'Delete' %}</a>
-    </div>
-</div>
 
 {% endblock %}

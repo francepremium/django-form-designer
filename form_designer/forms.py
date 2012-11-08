@@ -28,5 +28,7 @@ class FormCreateForm(forms.ModelForm):
         model = Form
 
 
-class WidgetUpdateForm(forms.ModelForm):
-    pass
+class WidgetForm(forms.ModelForm):
+    class Meta:
+        model = Widget
+        exclude = ('tab', 'content_type', 'name', 'order')

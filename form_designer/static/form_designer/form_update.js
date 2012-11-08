@@ -16,21 +16,70 @@ window.yourlabs.FormUpdate = function(options) {
     var formUpdate = this;
 
     this.init = function() {
-        console.log('init');
         $('.nav-tabs li').each(function() {
             $(this).data('tab', {
                 verbose_name: $(this).find('.name').html(),
                 pk: $(this).data('pk'),
             });
         });
+        
+        $('.nav-tabs li:first a').click();
     };
 
     this.bind = function() {
-        $('#new-tab').keypress(function(e) {
-            if (e.which == 13) // enter
-                $('#new-tab .save').click();
+        $(document).keyup(function(e) {
+            if (e.which == 27) { // esc
+                $('.modal .close').click();
+            }
         });
 
+        $('.modal').keypress(function(e) {
+            if (e.which == 13) // enter
+                $(this).find('.save').click();
+        });
+
+        $('.modal .cancel').click(function() {
+            $(this).parents('.modal').find('.close').click();
+        });
+
+        // {{{ widgets
+        $('.field .add').click(function(e) {
+            var url = formUpdate.options.widgetCreateUrl;
+            url += '?';
+            url += $.param({
+                widget_class: $(this).parents('.field').data('widget-class'),
+                tab_id: $('.nav-tabs .active').data('tab').pk,
+            });
+            
+            $('#field-configuration').data('action', url);
+
+            $.ajax(url, {
+                type: 'get',
+                async: false,
+                dataType: 'html',
+                success: function(data, textStatus, jqXHR) {
+                    $('#field-configuration form').html(data);
+                    $('#field-configuration').modal('show');
+                },
+            });
+        });
+
+        $('#field-configuration .save').click(function() {
+            $.ajax($('#field-configuration').data('action'), {
+                type: 'post',
+                data: $('#field-configuration form').serialize(),
+                success: function(data, textStatus, jqXHR) {
+                    if (jqXHR.status == 201) {
+                        $('#field-configuration').modal('hide');
+                    } else {
+                        $('#field-configuration form').html(data);
+                    }
+                },
+            });
+        });
+        // }}}
+
+        // {{{ tabs
         $('.new-tab').click(function() {
             $('#new-tab').modal('show');
             $('#new-tab input[type=text]:first').focus();
