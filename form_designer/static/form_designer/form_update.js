@@ -17,7 +17,7 @@ window.yourlabs.FormUpdate = function(options) {
 
     this.init = function() {
         $('.nav-tabs li').each(function() {
-            $(this).data('tab', {
+            $(this).data('form-tab', {
                 verbose_name: $(this).find('.name').html(),
                 pk: $(this).data('pk'),
             });
@@ -46,7 +46,7 @@ window.yourlabs.FormUpdate = function(options) {
             url += '?';
             url += $.param({
                 widget_class: $(this).parents('.field').data('widget-class'),
-                tab_id: $('.nav-tabs .active').data('tab').pk,
+                tab_id: $('.nav-tabs .active').data('form-tab').pk,
             });
             
             $('#field-configuration').data('action', url);
@@ -129,7 +129,7 @@ window.yourlabs.FormUpdate = function(options) {
                             ].join(''),
                         })
                     });
-                    tab.data('tab', data.tab);
+                    tab.data('form-tab', data.tab);
                     tab.insertBefore($('li.new-tab'));
 
                     $('#new-tab').modal('hide');
@@ -143,7 +143,7 @@ window.yourlabs.FormUpdate = function(options) {
         });
 
         $('.nav-tabs .remove').live('click', function() {
-            var data = $(this).parents('li').data('tab');
+            var data = $(this).parents('li').data('form-tab');
             $('#delete-tab .tab-name').html(data.verbose_name);
             $('#delete-tab').data('tab-pk', data.pk);
             $('#delete-tab').modal('show');
@@ -151,7 +151,7 @@ window.yourlabs.FormUpdate = function(options) {
 
         $('#delete-tab .save').bind('click', function() {
             var data = $('a[href=#tab-'+$('#delete-tab').data('tab-pk')+']').parents('li'
-                ).data('tab');
+                ).data('form-tab');
 
             $.ajax(formUpdate.options.tabDeleteUrl, {
                 async: false,
@@ -166,7 +166,7 @@ window.yourlabs.FormUpdate = function(options) {
         });
 
         $('.nav-tabs .name').live('focusout', function() {
-            var data = $(this).parents('li').data('tab');
+            var data = $(this).parents('li').data('form-tab');
             $.post(formUpdate.options.tabUpdateUrl, {
                 pk: data.pk,
                 name: $(this).html(),
@@ -180,7 +180,7 @@ window.yourlabs.FormUpdate = function(options) {
             stop: function(e, ui) {
                 var pks=[];
                 $('.nav-tabs li:not(.new-tab)').each(function() {
-                    pks.push($(this).data('tab').pk);
+                    pks.push($(this).data('form-tab').pk);
                 });
                 $.post(formUpdate.options.formUpdateUrl, {tabs: pks});
             },
