@@ -4,8 +4,21 @@ if (window.yourlabs == undefined) window.yourlabs = {};
 if (window.yourlabs.FormUpdate != undefined) console.log('form_update.js already loaded');
 
 // Make jquery behave according to standards, which are compatible
-// with django, else it would use PHP's implementration
+// with django, else it would use PHP's implementration.
 $.ajaxSettings.traditional = true;
+
+// Little helper to make an object out of form values.
+$.fn.serializeObject = function() {
+    var array = $(this).serializeArray();
+    var object = {};
+
+    for (var i=0; i<array.length; i++) {
+        object[array[i].name] = array[i].value;
+    }
+
+    return object;
+}
+
 
 window.yourlabs.FormUpdate = function(options) {
     this.form = [];
@@ -63,15 +76,63 @@ window.yourlabs.FormUpdate = function(options) {
         });
 
         $('#field-configuration .save').click(function() {
+            var formData = $('#field-configuration form').serializeObject();
+
             $.ajax($('#field-configuration').data('action'), {
                 type: 'post',
                 data: $('#field-configuration form').serialize(),
                 success: function(data, textStatus, jqXHR) {
-                    if (jqXHR.status == 201) {
-                        $('#field-configuration').modal('hide');
-                    } else {
+                    if (jqXHR.status != 201) {
                         $('#field-configuration form').html(data);
+                        return;
                     }
+
+                    $('#field-configuration').modal('hide');
+
+                    var field = $('<tr>', {
+                        'data-pk': data,
+                        'class': 'field',
+                    })
+
+                    field.append($('<td>', {
+                        'class': 'handle',
+                        html: $('<span>', {
+                            'class': 'handle',
+                            html: 'handle',
+                        }),
+                    }));
+
+                    $('<td>', {
+                        'class': 'required',
+                        html: $('<input>', {
+                            'type': 'checkbox',
+                            'checked': formData.required != undefined,
+                        }),
+                    }).appendTo(field);
+
+                    $('<td>', {
+                        'class': 'remove',
+                        html: '<span class="delete">delete</span>',
+                    }).appendTo(field);
+
+                    $('<td>', {
+                        'class': 'verbose-name',
+                        'contenteditable': 'true',
+                        html: formData.verbose_name,
+                    }).appendTo(field);
+
+                    $('<td>', {
+                        'class': 'help',
+                        html: '<span class="help">help</span>',
+                    }).appendTo(field);
+
+                    $('<td>', {
+                        'class': 'help-text',
+                        'contenteditable': 'true',
+                        html: formData.help_text,
+                    }).appendTo(field);
+                    
+                    $('.tab-pane.active table').append(field);
                 },
             });
         });
