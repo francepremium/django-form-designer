@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Max
 from django.template.defaultfilters import slugify
 
 from models import *
@@ -29,6 +30,18 @@ class FormCreateForm(forms.ModelForm):
 
 
 class WidgetForm(forms.ModelForm):
+    def save(self, commit=True):
+        order = self.instance.tab.widget_set.aggregate(m=Max('order'))['m']
+
+        if order:
+            order += 1
+        else:
+            order = 0
+
+        self.instance.order = order
+
+        return super(WidgetForm, self).save(commit=commit)
+
     class Meta:
         model = Widget
         exclude = ('tab', 'content_type', 'name', 'order')
