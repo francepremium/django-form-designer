@@ -136,6 +136,29 @@ window.yourlabs.FormUpdate = function(options) {
                 },
             });
         });
+
+        $('.field .remove').live('click', function() {
+            var row = $(this).parents('tr');
+            console.log('pk', row.attr('data-pk'))
+            $('#delete-field').data('field-pk', row.attr('data-pk'));
+            $('#delete-field .field-name').html( 
+                row.find('.verbose-name').html());
+            $('#delete-field').modal('show');
+        });
+
+        $('#delete-field .save').bind('click', function() {
+            var pk = $('#delete-field').data('field-pk');
+
+            $.ajax(formUpdate.options.widgetDeleteUrl, {
+                async: false,
+                type: 'post',
+                data: {'pk': pk},
+                success: function() {
+                    $('tr[data-pk=' + pk + ']').remove();
+                    $('#delete-field').modal('hide');
+                },
+            });
+        });
         // }}}
 
         // {{{ tabs

@@ -27,8 +27,8 @@
         var formUpdate = new yourlabs.FormUpdate({
             formUpdateUrl: '{{ request.widget_class }}',
             widgetCreateUrl: '{% url 'form_designer_widget_create' %}',
-            widgetUpdateUrl: '{% url 'form_designer_widget_update' 0 %}',
-            widgetDeleteUrl: '{% url 'form_designer_widget_delete' 0 %}',
+            widgetUpdateUrl: '{% url 'form_designer_widget_update' %}',
+            widgetDeleteUrl: '{% url 'form_designer_widget_delete' %}',
             tabCreateUrl: '{% url 'form_designer_tab_create' %}',
             tabUpdateUrl: '{% url 'form_designer_tab_update' %}',
             tabDeleteUrl: '{% url 'form_designer_tab_delete' %}',
@@ -68,7 +68,7 @@
                     <table class="fieldset">
                         {% for field in tab.widget_set.all %}
                         <tr class="field {{ field.kind }}" id="field-{{ field.name }}"
-                            data-name="{{ field.name }}" data-kind="{{ field.kind }}">
+                            data-pk="{{ field.pk }}">
                             <td class="handle">
                                 <span class="handle">handle</span>
                             </td>
@@ -126,6 +126,19 @@
         </div>
     </div>
 
+    <div class="modal hide fade" id="delete-field">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="title">{% trans 'Delete field' %}</h3>
+        </div>
+        <div class="modal-body">
+            <p>{% trans 'Are you sure you want to delete field' %} <span class="field-name"></span> ?</p>
+        </div>
+        <div class="modal-footer">
+            <a style="float:left" href="#" data-dismiss="modal" class="btn cancel btn-danger">{% trans 'Cancel' %}</a>
+            <a href="#" class="btn save btn-primary">{% trans 'Delete' %}</a>
+        </div>
+    </div>
 
     <div class="modal hide fade" id="new-tab">
         <div class="modal-header">

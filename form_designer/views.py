@@ -150,10 +150,18 @@ class WidgetCreateView(WidgetFormMixin, AjaxFormMixin, generic.CreateView):
     form_class = WidgetForm  # overridden by WidgetFormMixin
 
 
-class WidgetUpdateView(WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
+class WidgetSecurity(object):
+    """
+    Return a queryset of Widget that have a tab in a form which author is
+    request.user.  For security.
+    """
+    def get_queryset(self):
+        return Widget.objects.filter(tab__form__author=self.request.user)
+
+
+class WidgetUpdateView(PkUrlKwarg, WidgetSecurity, WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
     form_class = WidgetForm  # overridden by WidgetFormMixin
 
 
-class WidgetDeleteView(generic.DeleteView):
-    def get_object(self):
-        pass
+class WidgetDeleteView(PkUrlKwarg, WidgetSecurity, AjaxDeleteView):
+    pass
