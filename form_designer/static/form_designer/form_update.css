@@ -1,3 +1,11 @@
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
 .form div, .form table
 { 
     width: 100%; 
