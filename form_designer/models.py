@@ -99,6 +99,7 @@ class Widget(PolymorphicModel):
     required = models.BooleanField()
     order = models.IntegerField()
 
+    @property
     def configuration_form_class(self):
         """ Return the form class to configure this widget. """
 
@@ -107,7 +108,7 @@ class Widget(PolymorphicModel):
 
     def configuration_form_instance(self, request):
         """ Return the form instance to configure this widget. """
-        form_class = self.configuration_form_class()
+        form_class = self.configuration_form_class
 
         if request.method == 'POST':
             form = form_class(request.POST, instance=self)
