@@ -184,17 +184,18 @@ window.yourlabs.FormUpdate = function(options) {
                 $('.nav-tabs li:not(.new-tab)').each(function() {
                     pks.push($(this).data('tab').pk);
                 });
-                console.log(pks)
                 $.post(formUpdate.options.formUpdateUrl, {tabs: pks});
             },
         });
+
+        // }}}
     };
 
     this.currentTabContent = function() {
         return $('.tab-pane.active');
     };
 
-    this.fieldFormUrl = function(path) {
+    this.fieldFormUrl = function(widget_class) {
     }
 
     this.createFieldHtml = function(configuration) {
@@ -211,7 +212,7 @@ window.yourlabs.FormUpdate = function(options) {
         
         this.modalForm.data('field', field);
 
-        $.ajax(this.fieldUrl(path), {
+        $.ajax(this.fieldUrl(widget_class), {
             async: false,
             data: data,
             type: 'post',
@@ -223,7 +224,7 @@ window.yourlabs.FormUpdate = function(options) {
     };
 
     this.sendForm = function() {
-        $.ajax(this.fieldUrl(this.modalForm.data('path')), {
+        $.ajax(this.fieldUrl(this.modalForm.data('widget_class')), {
             async: false,
             data: formUpdate.modalForm.serialize(),
             type: 'post',

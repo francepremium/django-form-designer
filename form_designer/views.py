@@ -87,7 +87,6 @@ class FormCreateView(generic.CreateView):
         return super(FormCreateView, self).form_valid(form)
 
 
-
 class FormUpdateView(generic.DetailView):
     template_name = 'form_designer/form_update.html'
     model = Form

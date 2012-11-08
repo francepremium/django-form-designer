@@ -4,131 +4,125 @@
 {% load url from future %}
 
 {% block extra_head %}
-<link type="text/css" href="{{ STATIC_URL }}form_designer/jquery-ui/css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="Stylesheet" />
-<link type="text/css" href="{{ STATIC_URL }}form_designer/form_update.css" rel="Stylesheet" />
+    <link type="text/css" href="{{ STATIC_URL }}form_designer/form_update.css" rel="stylesheet" />
 {% endblock %}
 
 {% block extra_body %}
-<script src="{{ STATIC_URL }}form_designer/jquery.cookie.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}form_designer/jquery-ui.js" type="text/javascript"></script>
-<script type="text/javascript">
-    var csrftoken = $.cookie('csrftoken');
-    {% include 'form_designer/origin_security.js' %}
-</script>
-<script src="{{ STATIC_URL }}form_designer/form_update.js" type="text/javascript"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-    var formUpdate = new yourlabs.FormUpdate({
-        formUpdateUrl: '{{ request.path }}',
-        widgetCreateUrl: '{% url 'form_designer_widget_create' %}',
-        widgetUpdateUrl: '{% url 'form_designer_widget_update' 0 %}',
-        widgetDeleteUrl: '{% url 'form_designer_widget_delete' 0 %}',
-        tabCreateUrl: '{% url 'form_designer_tab_create' %}',
-        tabUpdateUrl: '{% url 'form_designer_tab_update' %}',
-        tabDeleteUrl: '{% url 'form_designer_tab_delete' %}',
+    {% block jquery_cookie %}
+        <script src="{{ STATIC_URL }}form_designer/jquery.cookie.js" type="text/javascript"></script>
+    {% endblock %}
+    {% block jquery_ui %}
+        <script src="{{ STATIC_URL }}form_designer/jquery-ui.js" type="text/javascript"></script>
+    {% endblock %}
+    {% block js_var_csrftoken %}
+        <script type="text/javascript">
+            var csrftoken = $.cookie('csrftoken');
+            {% include 'form_designer/origin_security.js' %}
+        </script>
+    {% endblock %}
+
+    <script src="{{ STATIC_URL }}form_designer/form_update.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        var formUpdate = new yourlabs.FormUpdate({
+            formUpdateUrl: '{{ request.widget_class }}',
+            widgetCreateUrl: '{% url 'form_designer_widget_create' %}',
+            widgetUpdateUrl: '{% url 'form_designer_widget_update' 0 %}',
+            widgetDeleteUrl: '{% url 'form_designer_widget_delete' 0 %}',
+            tabCreateUrl: '{% url 'form_designer_tab_create' %}',
+            tabUpdateUrl: '{% url 'form_designer_tab_update' %}',
+            tabDeleteUrl: '{% url 'form_designer_tab_delete' %}',
+        });
+        formUpdate.init();
+        formUpdate.bind();
     });
-    formUpdate.init();
-    formUpdate.bind();
-});
-</script>
+    </script>
 {% endblock %}
 
 {% block body %}
-<div class="form-info">
-    <h1 id="form-name" contenteditable="true">{{ form.name }}</h1>
-    <input type="hidden" id="form-pk" value="{{ form.pk }}" />
-</div>
+    <div class="form-info">
+        <h1 id="form-name" contenteditable="true">{{ form.name }}</h1>
+        <input type="hidden" id="form-pk" value="{{ form.pk }}" />
+    </div>
 
-<div class="submit-row">
-    <button class="btn save-form">{% trans 'Save form' %}</button>
-</div>
+    <div class="form outer">
+        <div class="enabled-form inner">
+            <ul class="nav nav-tabs">
+                {% for tab in form.tab_set.all %}
+                <li data-pk="{{ tab.pk }}">
+                    <a href="#tab-{{ tab.pk }}" data-toggle="tab">
+                        <span class="handle">handle</span>
+                        <span contenteditable="true" class="name">{{ tab.verbose_name }}</span>
+                        <span class="remove">delete</span>
+                    </a>
+                </li>
+                {% endfor %} 
+                <li class="new-tab">
+                    +
+                </li>
+            </ul>
 
-<div class="form outer">
-    <div class="enabled-form inner">
-        <ul class="nav nav-tabs">
-            {% for tab in form.tab_set.all %}
-            <li data-pk="{{ tab.pk }}">
-                <a href="#tab-{{ tab.pk }}" data-toggle="tab">
-                    <span class="handle ui-icon ui-icon-arrow-2-e-w"></span>
-                    <span contenteditable="true" class="name">{{ tab.verbose_name }}</span>
-                    <span class="ui-icon ui-icon-circle-close remove"></span>
-                </a>
-            </li>
-            {% endfor %} 
-            <li class="new-tab">
-                +
-            </li>
-        </ul>
-
-        <div class="tab-content">
-            {% for tab in form.tab_set.all %}
-            <div id="tab-{{ tab.pk }}">
-                <table class="fieldset">
-                    {% for field in tab.fields %}
-                    <tr class="field {{ field.kind }}" id="field-{{ field.name }}"
-                        data-name="{{ field.name }}" data-kind="{{ field.kind }}">
-                        <td class="handle">
-                            <span class="handle ui-icon ui-icon-arrowthick-2-n-s"></span>
-                        </td>
-                        <td class="required">
-                            <input type="checkbox" {% if field.required %}checked="checked"{% endif %} />
-                        </td>
-                        <td class="remove">
-                            <span class="ui-icon ui-icon-circle-close"></span>
-                        </td>
-                        <td class="verbose-name" contenteditable="true">
-                            {{ field.verbose_name }}
-                        </td>
-                        <td>
-                            <span class="help-icon ui-icon ui-icon-help"></span>
-                        </td>
-                        <td class="help-text" contenteditable="true">
-                            {{ field.help_text|safe }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
+            <div class="tab-content">
+                {% for tab in form.tab_set.all %}
+                <div id="tab-{{ tab.pk }}">
+                    <table class="fieldset">
+                        {% for field in tab.fields %}
+                        <tr class="field {{ field.kind }}" id="field-{{ field.name }}"
+                            data-name="{{ field.name }}" data-kind="{{ field.kind }}">
+                            <td class="handle">
+                                <span class="handle">handle</span>
+                            </td>
+                            <td class="required">
+                                <input type="checkbox" {% if field.required %}checked="checked"{% endif %} />
+                            </td>
+                            <td class="remove">
+                                <span>delete</span>
+                            </td>
+                            <td class="verbose-name" contenteditable="true">
+                                {{ field.verbose_name }}
+                            </td>
+                            <td>
+                                <span class="help-icon">help</span>
+                            </td>
+                            <td class="help-text" contenteditable="true">
+                                {{ field.help_text|safe }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
-</div>
 
-<div class="outer toolbox">
-    <table>
-        {% for path, class in widget_classes.items %}
-        <tr class="field {{ path }} new-field" id="new-field-{{ path }}" data-path="{{ path }}">
-            <td class="add">
-                add
-                <!-- <span class="handle ui-icon ui-icon-plusthick"></span> -->
-            </td>
-            <td class="handle">
-                handle
-                <!-- <span class="handle ui-icon ui-icon-arrowthick-2-n-s"></span> -->
-            </td>
-            <td class="required">
-                <input type="checkbox" />
-            </td>
-            <td class="remove">
-                <span class="ui-icon ui-icon-circle-close"></span>
-            </td>
-            <td class="verbose-name" title="{{ path.META.verbose_name }}">
-                {{ class.META.verbose_name }}
-            </td>
-            <td class="help-icon">
-                <span style="display:none" class="help-icon ui-icon ui-icon-help"></span>
-            </td>
-            <td class="help-text" contenteditable="true">
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
-
-<div class="modal hide fade" id="field-configuration">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 class="title">Title</h3>
+    <div class="outer toolbox">
+        <table>
+            {% for widget_class, class in widget_classes.items %}
+            <tr class="field {{ widget_class }} new-field" id="new-field-{{ widget_class }}" data-widget-class="{{ widget_class }}">
+                <td class="add">
+                    <span class="add">add</span>
+                </td>
+                <td class="handle">
+                    <span class="handle">handle</span>
+                </td>
+                <td class="required">
+                    <input type="checkbox" />
+                </td>
+                <td class="remove">
+                    <span class="remove">remove</span>
+                </td>
+                <td class="verbose-name" title="{{ widget_class.META.verbose_name }}">
+                    {{ class.META.verbose_name }}
+                </td>
+                <td class="help-icon">
+                    <span style="display:none" class="help">help</span>
+                </td>
+                <td class="help-text" contenteditable="true">
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 
     <div class="modal hide fade" id="field-configuration">
