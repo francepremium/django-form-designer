@@ -121,11 +121,11 @@ window.yourlabs.FormUpdate = function(options) {
                             href: '#tab-' + id,
                             'data-toggle': 'tab',
                             html: [
-                                '<span class="handle ui-icon ui-icon-arrow-2-e-w"></span>',
+                                '<span class="handle">handle</span>',
                                 '<span contenteditable="true" class="name">',
                                 data.tab.verbose_name,
                                 '</span>',
-                                '<span class="ui-icon ui-icon-circle-close remove"></span>',
+                                '<span class="remove">remove</span>',
                             ].join(''),
                         })
                     });
