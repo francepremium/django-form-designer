@@ -114,7 +114,7 @@ window.yourlabs.FormUpdate = function(options) {
                         html: $('<table>', {
                             'class': 'fieldset',
                         }),
-                    }).insertAfter('.tab-content div:last');
+                    }).insertAfter('.tab-list div:last');
         
                     var tab = $('<li>', {
                         html: $('<a>', {

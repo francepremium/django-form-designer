@@ -62,11 +62,11 @@
                 </li>
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-list">
                 {% for tab in form.tab_set.all %}
-                <div id="tab-{{ tab.pk }}">
+                <div class="tab-pane" id="tab-{{ tab.pk }}">
                     <table class="fieldset">
-                        {% for field in tab.fields %}
+                        {% for field in tab.widget_set.all %}
                         <tr class="field {{ field.kind }}" id="field-{{ field.name }}"
                             data-name="{{ field.name }}" data-kind="{{ field.kind }}">
                             <td class="handle">
@@ -81,8 +81,8 @@
                             <td class="verbose-name" contenteditable="true">
                                 {{ field.verbose_name }}
                             </td>
-                            <td>
-                                <span class="help-icon">help</span>
+                            <td class="help">
+                                <span class="help">help</span>
                             </td>
                             <td class="help-text" contenteditable="true">
                                 {{ field.help_text|safe }}
@@ -103,22 +103,8 @@
                 <td class="add">
                     <span class="add">add</span>
                 </td>
-                <td class="handle">
-                    <span class="handle">handle</span>
-                </td>
-                <td class="required">
-                    <input type="checkbox" />
-                </td>
-                <td class="remove">
-                    <span class="remove">remove</span>
-                </td>
                 <td class="verbose-name" title="{{ widget_class.META.verbose_name }}">
                     {{ class.META.verbose_name }}
-                </td>
-                <td class="help-icon">
-                    <span style="display:none" class="help">help</span>
-                </td>
-                <td class="help-text" contenteditable="true">
                 </td>
             </tr>
             {% endfor %}
@@ -128,7 +114,7 @@
     <div class="modal hide fade" id="field-configuration">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3 class="title">Title</h3>
+            <h3 class="title">{% trans 'Form field configuration' %}</h3>
         </div>
         <div class="modal-body">
             <form>
