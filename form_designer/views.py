@@ -118,12 +118,19 @@ class FormUpdateView(generic.DetailView):
         }
 
     def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
         if 'tabs' in request.POST.keys():
             i = 0
             for pk in request.POST.getlist('tabs'):
-                print self.get_object().tab_set.filter(pk=pk)
-                print i
-                self.get_object().tab_set.filter(pk=pk).update(order=i)
+                self.object.tab_set.filter(pk=pk).update(order=i)
+                i += 1
+
+        if 'widgets' in request.POST.keys():
+            i = 0
+            for pk in request.POST.getlist('widgets'):
+                Widget.objects.filter(tab__form=self.object, pk=pk
+                    ).update(order=i)
                 i += 1
 
         return http.HttpResponse(status=204)

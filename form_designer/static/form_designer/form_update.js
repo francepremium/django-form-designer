@@ -206,6 +206,20 @@ window.yourlabs.FormUpdate = function(options) {
                 },
             });
         });
+
+        $('table').sortable({
+            axis: 'y',
+            handle: '.handle',
+            items: '.field',
+            stop: function(e, ui) {
+                var pks=[];
+                $(e.target).find('.field').each(function() {
+                    pks.push($(this).attr('data-pk'));
+                });
+                $.post(formUpdate.options.formUpdateUrl, {
+                    pk: $('.nav-tabs li.active').data('pk'), widgets: pks});
+            },
+        });
         // }}}
 
         // {{{ tabs

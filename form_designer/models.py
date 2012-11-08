@@ -148,6 +148,9 @@ class Widget(PolymorphicModel):
     def create_url(self):
         return reverse('form_designer_widget_create')
 
+    class Meta:
+        ordering = ('order',)
+
 
 class InputWidget(Widget):
     max_length = models.IntegerField(default=255)
