@@ -7,6 +7,7 @@ from django.views import generic
 from django.views.generic.detail import SingleObjectMixin
 from django import shortcuts
 from django.template.defaultfilters import slugify
+from django.forms.models import modelform_factory
 
 from forms import FormCreateForm, CreateForm, WidgetForm
 from utils import import_class
@@ -136,7 +137,8 @@ class WidgetCreateView(generic.CreateView):
         else:
             kwargs = self.get_form_kwargs()
             kwargs.update({'instance': widget})
-            form = WidgetForm(**kwargs)
+            form_class = modelform_factory(widget_class, form=WidgetForm)
+            form = form_class(**kwargs)
 
         return form
 
