@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.forms.models import modelform_factory
 
 from picklefield.fields import PickledObjectField
 from polymodels.models import PolymorphicModel
@@ -97,6 +98,23 @@ class Widget(PolymorphicModel):
     help_text = models.TextField(blank=True)
     required = models.BooleanField()
     order = models.IntegerField()
+
+    def configuration_form_class(self):
+        """ Return the form class to configure this widget. """
+
+        from forms import WidgetForm  # avoid recursion
+        return modelform_factory(self.__class__, form=WidgetForm)
+
+    def configuration_form_instance(self, request):
+        """ Return the form instance to configure this widget. """
+        form_class = self.configuration_form_class()
+
+        if request.method == 'POST':
+            form = form_class(request.POST, instance=self)
+        else:
+            form = form_class(instance=self)
+
+        return form
 
     def field_class(self):
         return import_class(self.field_class)

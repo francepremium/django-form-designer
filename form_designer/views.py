@@ -132,15 +132,7 @@ class WidgetCreateView(generic.CreateView):
         widget = widget_class(tab=Tab.objects.get(  # basic security for now
             pk=self.request.GET['tab_id'], form__author=self.request.user))
 
-        if hasattr(widget_class, 'get_configuration_form'):
-            form = widget.get_configuration_form(self)
-        else:
-            kwargs = self.get_form_kwargs()
-            kwargs.update({'instance': widget})
-            form_class = modelform_factory(widget_class, form=WidgetForm)
-            form = form_class(**kwargs)
-
-        return form
+        return widget.configuration_form_instance(self.request)
 
     def form_valid(self, form):
         self.object = form.save()
