@@ -73,19 +73,22 @@
                                 <span class="handle">handle</span>
                             </td>
                             <td class="required">
-                                <input type="checkbox" {% if field.required %}checked="checked"{% endif %} />
+                                <input disabled="disabled" type="checkbox" {% if field.required %}checked="checked"{% endif %} />
                             </td>
                             <td class="remove">
                                 <span>delete</span>
                             </td>
-                            <td class="verbose-name" contenteditable="true">
+                            <td class="verbose-name">
                                 {{ field.verbose_name }}
                             </td>
                             <td class="help">
                                 <span class="help">help</span>
                             </td>
-                            <td class="help-text" contenteditable="true">
+                            <td class="help-text">
                                 {{ field.help_text|safe }}
+                            </td>
+                            <td class="configuration">
+                                <span class="configuration">configuration</span>
                             </td>
                         </tr>
                         {% endfor %}

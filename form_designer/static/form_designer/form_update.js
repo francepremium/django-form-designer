@@ -75,6 +75,65 @@ window.yourlabs.FormUpdate = function(options) {
             });
         });
 
+        updateField = function(pk, formData) { // {{{
+            var field = $('tr[data-pk=' + pk + ']');
+            field.find('.verbose-name').html(formData.verbose_name);
+            field.find('.help-text').html(formData.help_text);
+            field.find('input[type=checkbox]').attr('checked', formData.required != undefined);
+        } 
+        // }}}
+
+        createField = function(pk, formData) { // {{{ create field boilerplate
+            var field = $('<tr>', {
+                'data-pk': pk,
+                'class': 'field',
+            })
+
+            field.append($('<td>', {
+                'class': 'handle',
+                html: $('<span>', {
+                    'class': 'handle',
+                    html: 'handle',
+                }),
+            }));
+
+            $('<td>', {
+                'class': 'required',
+                html: $('<input>', {
+                    'type': 'checkbox',
+                    'checked': formData.required != undefined,
+                    'disabled': 'disabled',
+                }),
+            }).appendTo(field);
+
+            $('<td>', {
+                'class': 'remove',
+                html: '<span class="delete">delete</span>',
+            }).appendTo(field);
+
+            $('<td>', {
+                'class': 'verbose-name',
+                html: formData.verbose_name,
+            }).appendTo(field);
+
+            $('<td>', {
+                'class': 'help',
+                html: '<span class="help">help</span>',
+            }).appendTo(field);
+
+            $('<td>', {
+                'class': 'help-text',
+                html: formData.help_text,
+            }).appendTo(field);
+
+            $('<td>', {
+                'class': 'configuration',
+                html: '<span class="configuration">configuration</span>',
+            }).appendTo(field);
+
+            return field;
+        } // }}}
+
         $('#field-configuration .save').click(function() {
             var formData = $('#field-configuration form').serializeObject();
 
@@ -82,64 +141,52 @@ window.yourlabs.FormUpdate = function(options) {
                 type: 'post',
                 data: $('#field-configuration form').serialize(),
                 success: function(data, textStatus, jqXHR) {
-                    if (jqXHR.status != 201) {
+                    if (jqXHR.status != 201 && jqXHR.status != 204) {
                         $('#field-configuration form').html(data);
                         return;
                     }
 
                     $('#field-configuration').modal('hide');
 
-                    var field = $('<tr>', {
-                        'data-pk': data,
-                        'class': 'field',
-                    })
+                    if (jqXHR.status == 201) { // created
+                        field = createField(data, formData);
+                        $('.tab-pane.active table').append(field);
+                    } else if (jqXHR.status == 204) { // edited
+                        updateField($('#field-configuration').data(
+                            'field-pk'), formData);
+                        $('#field-configuration').data('field-pk', '');
+                    }
+                },
+            });
+        });
 
-                    field.append($('<td>', {
-                        'class': 'handle',
-                        html: $('<span>', {
-                            'class': 'handle',
-                            html: 'handle',
-                        }),
-                    }));
+        $('.field .configuration').live('click', function() {
+            var pk = $(this).parents('tr').attr('data-pk');
 
-                    $('<td>', {
-                        'class': 'required',
-                        html: $('<input>', {
-                            'type': 'checkbox',
-                            'checked': formData.required != undefined,
-                        }),
-                    }).appendTo(field);
+            var url = formUpdate.options.widgetUpdateUrl;
+            url += '?';
+            url += $.param({
+                pk: pk,
+                widget_class: $(this).parents('.field').data('widget-class'),
+            });
+ 
+            $('#field-configuration').data('action', url);
+            $('#field-configuration').data('field-pk', pk);
 
-                    $('<td>', {
-                        'class': 'remove',
-                        html: '<span class="delete">delete</span>',
-                    }).appendTo(field);
-
-                    $('<td>', {
-                        'class': 'verbose-name',
-                        'contenteditable': 'true',
-                        html: formData.verbose_name,
-                    }).appendTo(field);
-
-                    $('<td>', {
-                        'class': 'help',
-                        html: '<span class="help">help</span>',
-                    }).appendTo(field);
-
-                    $('<td>', {
-                        'class': 'help-text',
-                        'contenteditable': 'true',
-                        html: formData.help_text,
-                    }).appendTo(field);
-                    
-                    $('.tab-pane.active table').append(field);
+            $.ajax(url, {
+                type: 'get',
+                async: false,
+                dataType: 'html',
+                success: function(data, textStatus, jqXHR) {
+                    $('#field-configuration form').html(data);
+                    $('#field-configuration').modal('show');
                 },
             });
         });
 
         $('.field .remove').live('click', function() {
             var row = $(this).parents('tr');
-            console.log('pk', row.attr('data-pk'))
+
             $('#delete-field').data('field-pk', row.attr('data-pk'));
             $('#delete-field .field-name').html( 
                 row.find('.verbose-name').html());

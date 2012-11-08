@@ -35,8 +35,13 @@ class AjaxDeleteView(generic.DeleteView):
 
 class AjaxFormMixin(object):
     def form_valid(self, form):
+        if form.instance.pk:
+            status = 204
+        else:
+            status = 201
+
         self.object = form.save()
-        return http.HttpResponse(self.object.pk, status=201)
+        return http.HttpResponse(self.object.pk, status=status)
 
 
 class TabSecurity(object):
@@ -126,13 +131,20 @@ class FormUpdateView(generic.DetailView):
 
 class WidgetFormMixin(object):
     def get_form(self, form_class):
-        if self.request.GET['widget_class'] not in WIDGET_CLASSES:
-            return
+        pk = self.request.GET.get('pk', None)
+        widget_class = self.request.GET.get('widget_class', None)
 
-        widget_class = import_class(self.request.GET['widget_class'])
+        if pk:
+            self.object = Widget.objects.filter(pk=pk
+                ).select_subclasses()[0]
+        else:
+            if widget_class not in WIDGET_CLASSES:
+                return
 
-        self.object = widget_class(tab=Tab.objects.get(  # basic security for now
-            pk=self.request.GET['tab_id'], form__author=self.request.user))
+            widget_class = import_class(widget_class)
+
+            self.object = widget_class(tab=Tab.objects.get(  # basic security for now
+                pk=self.request.GET['tab_id'], form__author=self.request.user))
 
         return self.object.configuration_form_instance(self.request)
 
@@ -145,9 +157,8 @@ class WidgetFormMixin(object):
         ]
 
 
-
 class WidgetCreateView(WidgetFormMixin, AjaxFormMixin, generic.CreateView):
-    form_class = WidgetForm  # overridden by WidgetFormMixin
+    form_class = WidgetForm  # overridden by WidgetFormMixin.get_form
 
 
 class WidgetSecurity(object):
@@ -160,7 +171,7 @@ class WidgetSecurity(object):
 
 
 class WidgetUpdateView(PkUrlKwarg, WidgetSecurity, WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
-    form_class = WidgetForm  # overridden by WidgetFormMixin
+    form_class = WidgetForm  # overridden by WidgetFormMixin.get_form
 
 
 class WidgetDeleteView(PkUrlKwarg, WidgetSecurity, AjaxDeleteView):
