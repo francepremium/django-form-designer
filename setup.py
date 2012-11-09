@@ -31,7 +31,7 @@ class RunTests(Command):
 
 
 setup(
-    name='django-form_designer',
+    name='django-form-designer',
     version='0.0.0',
     description='Rich form designer for django',
     author='James Pic',
