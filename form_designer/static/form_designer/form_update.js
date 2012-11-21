@@ -29,14 +29,14 @@ window.yourlabs.FormUpdate = function(options) {
     var formUpdate = this;
 
     this.init = function() {
-        $('.nav-tabs li').each(function() {
+        $('.form-tabs li').each(function() {
             $(this).data('form-tab', {
                 verbose_name: $(this).find('.name').html(),
                 pk: $(this).data('pk'),
             });
         });
         
-        $('.nav-tabs li:first a').click();
+        $('.form-tabs li:first a').click();
     };
 
     this.bind = function() {
@@ -59,7 +59,7 @@ window.yourlabs.FormUpdate = function(options) {
             url += '?';
             url += $.param({
                 widget_class: $(this).parents('.field').data('widget-class'),
-                tab_id: $('.nav-tabs .active').data('form-tab').pk,
+                tab_id: $('.form-tabs .active').data('form-tab').pk,
             });
             
             $('#field-configuration').data('action', url);
@@ -217,7 +217,7 @@ window.yourlabs.FormUpdate = function(options) {
                     pks.push($(this).attr('data-pk'));
                 });
                 $.post(formUpdate.options.formUpdateUrl, {
-                    pk: $('.nav-tabs li.active').data('pk'), widgets: pks});
+                    pk: $('.form-tabs li.active').data('pk'), widgets: pks});
             },
         });
         // }}}
@@ -282,12 +282,12 @@ window.yourlabs.FormUpdate = function(options) {
                     $('#new-tab .help-inline').remove();
                     $('#new-tab .error').removeClass('error');
 
-                    $('.nav-tabs li:not(.new-tab):last a').click();
+                    $('.form-tabs li:not(.new-tab):last a').click();
                 },
             });
         });
 
-        $('.nav-tabs .remove').live('click', function() {
+        $('.form-tabs .remove').live('click', function() {
             var data = $(this).parents('li').data('form-tab');
             $('#delete-tab .tab-name').html(data.verbose_name);
             $('#delete-tab').data('tab-pk', data.pk);
@@ -310,7 +310,7 @@ window.yourlabs.FormUpdate = function(options) {
             });
         });
 
-        $('.nav-tabs .name').live('focusout', function() {
+        $('.form-tabs .name').live('focusout', function() {
             var data = $(this).parents('li').data('form-tab');
             $.post(formUpdate.options.tabUpdateUrl, {
                 pk: data.pk,
@@ -318,13 +318,13 @@ window.yourlabs.FormUpdate = function(options) {
             });
         });
 
-        $('.nav-tabs').sortable({
+        $('.form-tabs').sortable({
             axis: 'x',
             handle: '.handle',
             items: 'li:not(.new-tab)',
             stop: function(e, ui) {
                 var pks=[];
-                $('.nav-tabs li:not(.new-tab)').each(function() {
+                $('.form-tabs li:not(.new-tab)').each(function() {
                     pks.push($(this).data('form-tab').pk);
                 });
                 $.post(formUpdate.options.formUpdateUrl, {tabs: pks});
