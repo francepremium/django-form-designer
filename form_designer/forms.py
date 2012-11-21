@@ -17,13 +17,6 @@ class CreateForm(forms.Form):
 
 
 class FormCreateForm(forms.ModelForm):
-    def save(self, commit=True):
-        obj = super(FormCreateForm, self).save(False)
-        obj.name = slugify(self.cleaned_data['verbose_name'])
-        if commit:
-            obj.save()
-        return obj
-
     class Meta:
         fields = ('verbose_name',)
         model = Form

@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.forms.models import modelform_factory
+from django.template.defaultfilters import slugify
+from django.db.models import signals
 
 from picklefield.fields import PickledObjectField
 from polymodels.models import PolymorphicModel
@@ -178,3 +180,12 @@ class ChoiceWidget(Widget):
     class Meta:
         verbose_name = _(u'Choice select')
         verbose_name_plural = _(u'Choice selects')
+
+
+def auto_name(sender, instance, **kwargs):
+    if not instance.name:
+        instance.name = slugify(instance.verbose_name)
+signals.pre_save.connect(auto_name, sender=Form)
+signals.pre_save.connect(auto_name, sender=Tab)
+signals.pre_save.connect(auto_name, sender=Widget)
+
