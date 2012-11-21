@@ -189,3 +189,10 @@ signals.pre_save.connect(auto_name, sender=Form)
 signals.pre_save.connect(auto_name, sender=Tab)
 signals.pre_save.connect(auto_name, sender=Widget)
 
+
+def first_tab(sender, instance, created, **kwargs):
+    if not created:
+        return
+
+    instance.tab_set.create(verbose_name=instance.verbose_name)
+signals.post_save.connect(first_tab, sender=Form)
