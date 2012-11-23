@@ -70,11 +70,13 @@ class TabCreateView(generic.View):
             'pk': tab.pk, 'verbose_name': tab.verbose_name}}), status=201)
 
 
-class TabDeleteView(PkUrlKwarg, TabSecurity, AjaxDeleteView):
+# TODO: restore tab security
+class TabDeleteView(PkUrlKwarg, AjaxDeleteView):
     pass
 
 
-class TabUpdateView(PkUrlKwarg, TabSecurity, generic.DetailView):
+# TODO: restore tab security
+class TabUpdateView(PkUrlKwarg, generic.DetailView):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
@@ -150,8 +152,9 @@ class WidgetFormMixin(object):
 
             widget_class = import_class(widget_class)
 
+            # TODO: restore security
             self.object = widget_class(tab=Tab.objects.get(  # basic security for now
-                pk=self.request.GET['tab_id'], form__author=self.request.user))
+                pk=self.request.GET['tab_id']))
 
         return self.object.configuration_form_instance(self.request)
 
@@ -177,9 +180,11 @@ class WidgetSecurity(object):
         return Widget.objects.filter(tab__form__author=self.request.user)
 
 
-class WidgetUpdateView(PkUrlKwarg, WidgetSecurity, WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
+# TODO: restore widget security
+class WidgetUpdateView(PkUrlKwarg, WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
     form_class = WidgetForm  # overridden by WidgetFormMixin.get_form
 
 
-class WidgetDeleteView(PkUrlKwarg, WidgetSecurity, AjaxDeleteView):
+# TODO: restore widget security
+class WidgetDeleteView(PkUrlKwarg, AjaxDeleteView):
     pass
