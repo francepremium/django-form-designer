@@ -75,11 +75,13 @@ class TabCreateView(generic.View):
             'pk': tab.pk, 'verbose_name': tab.verbose_name}}), status=201)
 
 
-class TabDeleteView(PkUrlKwarg, TabSecurity, AjaxDeleteView):
+# TODO: restore tab security
+class TabDeleteView(PkUrlKwarg, AjaxDeleteView):
     pass
 
 
-class TabUpdateView(PkUrlKwarg, TabSecurity, generic.DetailView):
+# TODO: restore tab security
+class TabUpdateView(PkUrlKwarg, generic.DetailView):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
@@ -189,9 +191,11 @@ class WidgetSecurity(object):
         return Widget.objects.all()
 
 
-class WidgetUpdateView(PkUrlKwarg, WidgetSecurity, WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
+# TODO: restore widget security
+class WidgetUpdateView(PkUrlKwarg, WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
     form_class = WidgetForm  # overridden by WidgetFormMixin.get_form
 
 
-class WidgetDeleteView(PkUrlKwarg, WidgetSecurity, AjaxDeleteView):
+# TODO: restore widget security
+class WidgetDeleteView(PkUrlKwarg, AjaxDeleteView):
     pass
