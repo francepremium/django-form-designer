@@ -50,7 +50,9 @@ class TabSecurity(object):
     For security.
     """
     def get_queryset(self):
-        return Tab.objects.filter(form__author=self.request.user)
+        # TODO: restore security
+        #return Tab.objects.filter(form__author=self.request.user)
+        return Tab.objects.all()
 
 
 class TabCreateView(generic.View):
@@ -58,8 +60,11 @@ class TabCreateView(generic.View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
+        # TODO: restore security
+        #form = shortcuts.get_object_or_404(Form,
+        #    author=self.request.user, pk=request.POST['form_pk'])
         form = shortcuts.get_object_or_404(Form,
-            author=self.request.user, pk=request.POST['form_pk'])
+            pk=request.POST['form_pk'])
 
         tab = Tab.objects.create(
             verbose_name=request.POST['verbose_name'],
@@ -102,7 +107,9 @@ class FormUpdateView(generic.DetailView):
     template_name = 'form_designer/form_update.html'
 
     def get_queryset(self):
-        return Form.objects.filter(author=self.request.user)
+        # TODO: restore security
+        #return Form.objects.filter(author=self.request.user)
+        return Form.objects.all()
 
     def get_context_data(self, *args, **kwargs):
         widget_classes = {}
@@ -150,8 +157,11 @@ class WidgetFormMixin(object):
 
             widget_class = import_class(widget_class)
 
+            #self.object = widget_class(tab=Tab.objects.get(  # basic security for now
+            #    pk=self.request.GET['tab_id'], form__author=self.request.user))
+            # TODO: restore security
             self.object = widget_class(tab=Tab.objects.get(  # basic security for now
-                pk=self.request.GET['tab_id'], form__author=self.request.user))
+                pk=self.request.GET['tab_id']))
 
         return self.object.configuration_form_instance(self.request)
 
@@ -174,7 +184,9 @@ class WidgetSecurity(object):
     request.user.  For security.
     """
     def get_queryset(self):
-        return Widget.objects.filter(tab__form__author=self.request.user)
+        # TODO: restore author
+        #return Widget.objects.filter(tab__form__author=self.request.user)
+        return Widget.objects.all()
 
 
 class WidgetUpdateView(PkUrlKwarg, WidgetSecurity, WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
