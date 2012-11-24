@@ -49,6 +49,7 @@ setup(
         'django-polymodels',
         'django-picklefield',
         'django-forms-bootstrap',
+        'django-crispy-forms',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
