@@ -9,6 +9,8 @@ from django import shortcuts
 from django.template.defaultfilters import slugify
 from django.forms.models import modelform_factory
 
+import rules_light
+
 from forms import FormCreateForm, CreateForm, WidgetForm
 from utils import import_class
 from models import *
@@ -20,12 +22,13 @@ class PkUrlKwarg(SingleObjectMixin):
     Take the pk from request.GET and sets it to kwargs, useful to avoid
     reversing urls from javascript
     """
-    def get_object(self, queryset=None):
+    def get_object(self, *args, **kwargs):
         self.kwargs[self.pk_url_kwarg] = self.request.REQUEST['pk']
-        return super(PkUrlKwarg, self).get_object(queryset)
+        return super(PkUrlKwarg, self).get_object(*args)
 
 
 class AjaxDeleteView(generic.DeleteView):
+    """ Delete and respond with 204. Only accept post requests. """
     http_method_names = ['post']
 
     def delete(self, request, *args, **kwargs):
@@ -33,7 +36,9 @@ class AjaxDeleteView(generic.DeleteView):
         self.object.delete()
         return http.HttpResponse('', status=204)
 
+
 class AjaxFormMixin(object):
+    """ `form_valid()` respond with 204 on update, 201 on creation. """
     def form_valid(self, form):
         if form.instance.pk:
             status = 204
@@ -44,27 +49,15 @@ class AjaxFormMixin(object):
         return http.HttpResponse(self.object.pk, status=status)
 
 
-class TabSecurity(object):
-    """
-    Return a queryset of Tab that have a form which author is request.user.
-    For security.
-    """
-    def get_queryset(self):
-        # TODO: restore security
-        #return Tab.objects.filter(form__author=self.request.user)
-        return Tab.objects.all()
-
-
 class TabCreateView(generic.View):
     model = Tab
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        # TODO: restore security
-        #form = shortcuts.get_object_or_404(Form,
-        #    author=self.request.user, pk=request.POST['form_pk'])
         form = shortcuts.get_object_or_404(Form,
             pk=request.POST['form_pk'])
+
+        rules_light.require(request.user, 'form_designer.form.update', form)
 
         tab = Tab.objects.create(
             verbose_name=request.POST['verbose_name'],
@@ -75,23 +68,35 @@ class TabCreateView(generic.View):
             'pk': tab.pk, 'verbose_name': tab.verbose_name}}), status=201)
 
 
-# TODO: restore tab security
-class TabDeleteView(PkUrlKwarg, AjaxDeleteView):
-    pass
+class TabSecurity(object):
+    """
+    Decorates `get_object()`, but checks if `request.user` has
+    `form_designer.form.update` for tab.form.
+    """
+    def get_object(self):
+        tab = super(TabSecurity, self).get_object()
+        rules_light.require(self.request.user, 'form_designer.form.update',
+            tab.form)
+        return tab
 
 
-# TODO: restore tab security
-class TabUpdateView(PkUrlKwarg, generic.DetailView):
+class TabDeleteView(PkUrlKwarg, TabSecurity, AjaxDeleteView):
+    model = Tab
+
+
+class TabUpdateView(PkUrlKwarg, TabSecurity, generic.DetailView):
     http_method_names = ['post']
+    model = Tab
 
     def post(self, request, *args, **kwargs):
         tab = self.get_object()
-        tab.verbose_name = defaultfilters.striptags(request.POST['name']).strip(
-            ).replace('&nbsp;', '')
+        tab.verbose_name = defaultfilters.striptags(
+            request.POST['name']).strip().replace('&nbsp;', '')
         tab.save()
         return http.HttpResponse(status=204)
 
 
+@rules_light.class_decorator
 class FormCreateView(generic.CreateView):
     model = Form
     template_name = 'form_designer/form_create.html'
@@ -105,13 +110,10 @@ class FormCreateView(generic.CreateView):
         return super(FormCreateView, self).form_valid(form)
 
 
+@rules_light.class_decorator('form_designer.form.update')
 class FormUpdateView(generic.DetailView):
+    model = Form
     template_name = 'form_designer/form_update.html'
-
-    def get_queryset(self):
-        # TODO: restore security
-        #return Form.objects.filter(author=self.request.user)
-        return Form.objects.all()
 
     def get_context_data(self, *args, **kwargs):
         widget_classes = {}
@@ -157,13 +159,14 @@ class WidgetFormMixin(object):
             if widget_class not in WIDGET_CLASSES:
                 return
 
+            tab = Tab.objects.get(pk=self.request.GET['tab_id'])
+
             widget_class = import_class(widget_class)
 
-            #self.object = widget_class(tab=Tab.objects.get(  # basic security for now
-            #    pk=self.request.GET['tab_id'], form__author=self.request.user))
-            # TODO: restore security
-            self.object = widget_class(tab=Tab.objects.get(  # basic security for now
-                pk=self.request.GET['tab_id']))
+            self.object = widget_class(tab=tab)
+
+        rules_light.require(self.request.user, 'form_designer.form.update',
+            self.object.tab.form)
 
         return self.object.configuration_form_instance(self.request)
 
@@ -182,20 +185,19 @@ class WidgetCreateView(WidgetFormMixin, AjaxFormMixin, generic.CreateView):
 
 class WidgetSecurity(object):
     """
-    Return a queryset of Widget that have a tab in a form which author is
-    request.user.  For security.
+    Decorate `get_object()`, to test if user has update permission on the form.
     """
-    def get_queryset(self):
-        # TODO: restore author
-        #return Widget.objects.filter(tab__form__author=self.request.user)
-        return Widget.objects.all()
+    def get_object(self):
+        widget = super(WidgetSecurity, self).get_object()
+        rules_light.require(self.request.user, 'form_designer.form.update',
+                widget.tab.form)
+        return widget
 
 
-# TODO: restore widget security
-class WidgetUpdateView(PkUrlKwarg, WidgetFormMixin, AjaxFormMixin, generic.UpdateView):
-    form_class = WidgetForm  # overridden by WidgetFormMixin.get_form
+class WidgetUpdateView(PkUrlKwarg, WidgetSecurity, WidgetFormMixin,
+        AjaxFormMixin, generic.UpdateView):
+    model = Widget
 
 
-# TODO: restore widget security
-class WidgetDeleteView(PkUrlKwarg, AjaxDeleteView):
-    pass
+class WidgetDeleteView(PkUrlKwarg, WidgetSecurity, AjaxDeleteView):
+    model = Widget

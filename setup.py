@@ -47,6 +47,7 @@ setup(
     install_requires=[
         'django',
         'django-polymodels',
+        'django-rules',
         'django-picklefield',
         'django-forms-bootstrap',
         'django-crispy-forms',

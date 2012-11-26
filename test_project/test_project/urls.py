@@ -1,5 +1,8 @@
 from django.conf.urls import patterns, include, url
 
+import rules_light
+rules_light.autodiscover()
+
 from django.contrib import admin
 
 js_info_dict = {
