@@ -151,10 +151,12 @@
         <div class="modal-body">
             <div class="control-group">
                 <label>{% trans 'Title' %}</label>
-                <div class="controls">
-                    <input type="text" placeholder="{% trans 'Type the tab title here' %}" name="verbose_name"/>
-                    <span class="help-block">{% trans 'You will then be able to change it by clicking on the tab title in the form editor.' %}</span>
-                </div>
+                <form>
+                    <div class="controls">
+                        <input type="text" placeholder="{% trans 'Type the tab title here' %}" name="verbose_name"/>
+                        <span class="help-block">{% trans 'You will then be able to change it by clicking on the tab title in the form editor.' %}</span>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="modal-footer">

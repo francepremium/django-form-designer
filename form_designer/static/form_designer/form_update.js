@@ -44,18 +44,21 @@ window.yourlabs.FormUpdate = function(options) {
             if (e.which == 27) { // esc
                 $('.modal .close').click();
             }
-            if (e.which == 13) { // enter
-                e.preventDefault();
-                $('.modal:visible').find('.save').click();
-            }
         });
 
-        $('.modal .cancel').click(function() {
+        $('.modal form').live('submit', function(e) {
+            e.preventDefault();
+            $(this).parents('.modal').find('.save').click();
+        });
+
+        $('.modal .cancel').live('click', function() {
             $(this).parents('.modal').find('.close').click();
         });
 
         // {{{ widgets
         $('.field .add').click(function(e) {
+            e.stopPropagation();
+
             var url = formUpdate.options.widgetCreateUrl;
             url += '?';
             url += $.param({
