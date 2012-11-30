@@ -45,6 +45,7 @@ window.yourlabs.FormUpdate = function(options) {
                 $('.modal .close').click();
             }
             if (e.which == 13) { // enter
+                e.preventDefault();
                 $('.modal:visible').find('.save').click();
             }
         });
