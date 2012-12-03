@@ -75,6 +75,7 @@ window.yourlabs.FormUpdate = function(options) {
                 success: function(data, textStatus, jqXHR) {
                     $('#field-configuration form').html(data);
                     $('#field-configuration').modal('show');
+                    $('#field-configuration input:first').focus();
                 },
             });
         });

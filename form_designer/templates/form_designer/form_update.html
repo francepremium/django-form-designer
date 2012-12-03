@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block extra_body %}
+    {{ block.super }}
+
     {% block jquery_cookie %}
         <script src="{{ STATIC_URL }}form_designer/jquery.cookie.js" type="text/javascript"></script>
     {% endblock %}

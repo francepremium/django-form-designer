@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django import forms
 from django.forms.models import modelform_factory
 from django.template.defaultfilters import slugify
 from django.db.models import signals
@@ -27,6 +28,13 @@ class Form(models.Model):
             layout.fields.append(tab.to_crispy())
 
         return layout
+
+    def get_form_class(self):
+        form_class_name = 'Form%s' % self.pk
+        widgets = Widget.objects.filter(tab__form=self).select_subclasses()
+        attributes = {w.name: w.field_instance() for w in widgets}
+        form_class = type(form_class_name, (forms.Form,), attributes)
+        return form_class
 
     @property
     def fields(self):
@@ -120,25 +128,24 @@ class Widget(PolymorphicModel):
         return form
 
     def field_class(self):
-        return import_class(self.field_class)
+        return import_class(self.field_class_path)
 
     def widget_class(self):
-        return import_class(self.widget_class)
+        return import_class(self.widget_class_path)
 
     def field_kwargs(self):
         return {
-            'label': self.name,
+            'label': self.verbose_name,
             'required': self.required,
             'help_text': self.help_text,
+            'widget': self.widget_class()(**self.widget_kwargs()),
         }
 
     def widget_kwargs(self):
         return {}
 
-    def formfield_instance(self):
-        return self.formfield_class()(
-            widget=self.widget_class()(**self.widget_kwargs()),
-            **self.formfield_kwargs())
+    def field_instance(self):
+        return self.field_class()(**self.field_kwargs())
 
     def __unicode__(self):
         return self.verbose_name
@@ -156,8 +163,8 @@ class Widget(PolymorphicModel):
 
 class InputWidget(Widget):
     max_length = models.IntegerField(default=255)
-    field_class = 'django.forms.fields.CharField'
-    widget_class = 'django.forms.widgets.InputWidget'
+    field_class_path = 'django.forms.fields.CharField'
+    widget_class_path = 'django.forms.widgets.Input'
 
     class Meta:
         verbose_name = _(u'Short text input')
@@ -165,8 +172,8 @@ class InputWidget(Widget):
 
 
 class TextareaWidget(Widget):
-    field_class = 'django.forms.fields.CharField'
-    widget_class = 'django.forms.widgets.TextareaWidget'
+    field_class_path = 'django.forms.fields.CharField'
+    widget_class_path = 'django.forms.widgets.Textarea'
 
     class Meta:
         verbose_name = _(u'Long text input')
@@ -183,11 +190,12 @@ class ChoiceWidget(Widget):
 
 
 def auto_name(sender, instance, **kwargs):
+    if not issubclass(sender, (Form, Tab, Widget)):
+        return
+
     if not instance.name:
-        instance.name = slugify(instance.verbose_name)
-signals.pre_save.connect(auto_name, sender=Form)
-signals.pre_save.connect(auto_name, sender=Tab)
-signals.pre_save.connect(auto_name, sender=Widget)
+        instance.name = slugify(instance.verbose_name).replace('-', '_')
+signals.pre_save.connect(auto_name)
 
 
 def first_tab(sender, instance, created, **kwargs):
