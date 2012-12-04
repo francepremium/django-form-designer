@@ -29,11 +29,16 @@ class Form(models.Model):
 
         return layout
 
-    def get_form_class(self):
-        form_class_name = 'Form%s' % self.pk
+    def get_form_class(self, bases=None, form_class_name=None):
+        if bases is None:
+            bases = (forms.Form,)
+
+        if form_class_name is None:
+            form_class_name = 'Form%s' % self.pk
+
         widgets = Widget.objects.filter(tab__form=self).select_subclasses()
         attributes = {w.name: w.field_instance() for w in widgets}
-        form_class = type(form_class_name, (forms.Form,), attributes)
+        form_class = type(form_class_name, bases, attributes)
         return form_class
 
     @property
