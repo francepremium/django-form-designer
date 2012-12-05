@@ -29,7 +29,7 @@ class Form(models.Model):
 
         return layout
 
-    def get_form_class(self, bases=None, form_class_name=None):
+    def get_form_class(self, bases=None, form_class_name=None, attrs=None):
         if bases is None:
             bases = (forms.Form,)
 
@@ -38,6 +38,10 @@ class Form(models.Model):
 
         widgets = Widget.objects.filter(tab__form=self).select_subclasses()
         attributes = {w.name: w.field_instance() for w in widgets}
+
+        if attrs:
+            attributes.update(attrs)
+
         form_class = type(form_class_name, bases, attributes)
         return form_class
 
