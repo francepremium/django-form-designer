@@ -131,6 +131,11 @@ class FormUpdateView(generic.DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
+        if 'name' in request.POST.keys():
+            self.object.verbose_name = request.POST['name'].strip().replace(
+                '&nbsp;', '')
+            self.object.save()
+
         if 'tabs' in request.POST.keys():
             i = 0
             for pk in request.POST.getlist('tabs'):

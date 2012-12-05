@@ -335,8 +335,12 @@ window.yourlabs.FormUpdate = function(options) {
                 $.post(formUpdate.options.formUpdateUrl, {tabs: pks});
             },
         });
-
         // }}}
+        
+        $('#form-name').focusout(function() {
+            $.post(formUpdate.options.formUpdateUrl, {
+                name: $(this).html()});
+        });
     };
 
     this.currentTabContent = function() {
