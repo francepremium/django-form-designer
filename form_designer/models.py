@@ -173,7 +173,7 @@ class Widget(PolymorphicModel):
 class InputWidget(Widget):
     max_length = models.IntegerField(default=255)
     field_class_path = 'django.forms.fields.CharField'
-    widget_class_path = 'django.forms.widgets.Input'
+    widget_class_path = 'django.forms.widgets.TextInput'
 
     class Meta:
         verbose_name = _(u'Short text input')
