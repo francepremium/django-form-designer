@@ -80,7 +80,7 @@ class Tab(models.Model):
     order = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ('order',)
+        ordering = ('order', 'pk')
 
     def to_crispy(self):
         fieldset = Fieldset(self.name)
