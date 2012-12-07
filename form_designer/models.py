@@ -243,7 +243,7 @@ class EmailWidget(Widget):
 
 class BooleanWidget(Widget):
     field_class_path = 'django.forms.fields.BooleanField'
-    widget_class_path = 'django.forms.widgets.BooleanWidget'
+    widget_class_path = 'django.forms.widgets.CheckboxInput'
 
     class Meta:
         verbose_name = _(u'Checkbox input')
