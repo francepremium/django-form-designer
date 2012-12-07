@@ -59,11 +59,18 @@ window.yourlabs.FormUpdate = function(options) {
         $('.field .add').click(function(e) {
             e.stopPropagation();
 
+            var tab = $('.form-tabs .active');
+
+            if (!tab.length) {
+                alert('Please select a tab');
+                return;
+            }
+
             var url = formUpdate.options.widgetCreateUrl;
             url += '?';
             url += $.param({
                 widget_class: $(this).parents('.field').data('widget-class'),
-                tab_id: $('.form-tabs .active').data('form-tab').pk,
+                tab_id: tab.data('form-tab').pk,
             });
             
             $('#field-configuration').data('action', url);
