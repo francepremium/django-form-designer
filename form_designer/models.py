@@ -175,9 +175,52 @@ class InputWidget(Widget):
     field_class_path = 'django.forms.fields.CharField'
     widget_class_path = 'django.forms.widgets.TextInput'
 
+    def field_kwargs(self):
+        kwargs = super(InputWidget, self).field_kwargs()
+        kwargs['max_length'] = self.max_length
+        return kwargs
+
     class Meta:
         verbose_name = _(u'Short text input')
         verbose_name_plural = _(u'Short text inputs')
+
+
+class IntegerWidget(Widget):
+    min_value = models.IntegerField(null=True, blank=True)
+    max_value = models.IntegerField(null=True, blank=True)
+    field_class_path = 'django.forms.fields.IntegerField'
+    widget_class_path = 'django.forms.widgets.TextInput'
+
+    def field_kwargs(self):
+        kwargs = super(IntegerWidget, self).field_kwargs()
+        kwargs['max_value'] = self.max_value
+        kwargs['min_value'] = self.min_value
+        return kwargs
+
+    class Meta:
+        verbose_name = _(u'Integer input')
+        verbose_name_plural = _(u'Integer inputs')
+
+
+class DecimalWidget(Widget):
+    min_value = models.IntegerField(null=True, blank=True)
+    max_value = models.IntegerField(null=True, blank=True)
+    max_digits = models.IntegerField(null=True, blank=True)
+    decimal_places = models.IntegerField(null=True, blank=True)
+    field_class_path = 'django.forms.fields.DecimalField'
+    widget_class_path = 'django.forms.widgets.TextInput'
+
+    def field_kwargs(self):
+        kwargs = super(DecimalWidget, self).field_kwargs()
+        kwargs['max_value'] = self.max_value
+        kwargs['min_value'] = self.min_value
+        kwargs['max_digits'] = self.max_digits
+        kwargs['decimal_places'] = self.decimal_places
+        return kwargs
+
+    class Meta:
+        verbose_name = _(u'Decimal input')
+        verbose_name_plural = _(u'Decimal inputs')
 
 
 class TextareaWidget(Widget):
@@ -187,6 +230,24 @@ class TextareaWidget(Widget):
     class Meta:
         verbose_name = _(u'Long text input')
         verbose_name_plural = _(u'Long text inputs')
+
+
+class EmailWidget(Widget):
+    field_class_path = 'django.forms.fields.EmailField'
+    widget_class_path = 'django.forms.widgets.TextInput'
+
+    class Meta:
+        verbose_name = _(u'Email input')
+        verbose_name_plural = _(u'Email inputs')
+
+
+class BooleanWidget(Widget):
+    field_class_path = 'django.forms.fields.BooleanField'
+    widget_class_path = 'django.forms.widgets.BooleanWidget'
+
+    class Meta:
+        verbose_name = _(u'Email input')
+        verbose_name_plural = _(u'Email inputs')
 
 
 class ChoiceWidget(Widget):
