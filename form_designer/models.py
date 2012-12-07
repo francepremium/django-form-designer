@@ -246,8 +246,8 @@ class BooleanWidget(Widget):
     widget_class_path = 'django.forms.widgets.BooleanWidget'
 
     class Meta:
-        verbose_name = _(u'Email input')
-        verbose_name_plural = _(u'Email inputs')
+        verbose_name = _(u'Checkbox input')
+        verbose_name_plural = _(u'Checkbox inputs')
 
 
 class ChoiceWidget(Widget):
