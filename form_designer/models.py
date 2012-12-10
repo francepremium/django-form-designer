@@ -207,7 +207,7 @@ class DecimalWidget(Widget):
     max_value = models.IntegerField(null=True, blank=True)
     max_digits = models.IntegerField(null=True, blank=True)
     decimal_places = models.IntegerField(null=True, blank=True)
-    field_class_path = 'django.forms.fields.DecimalField'
+    field_class_path = 'form_designer.fields.DecimalField'
     widget_class_path = 'django.forms.widgets.TextInput'
 
     def field_kwargs(self):
