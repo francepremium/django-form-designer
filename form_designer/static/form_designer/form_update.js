@@ -147,6 +147,8 @@ window.yourlabs.FormUpdate = function(options) {
         } // }}}
 
         $('#field-configuration .save').click(function() {
+            $(this).attr('disabled', 'disabled');
+
             var formData = $('#field-configuration form').serializeObject();
 
             $.ajax($('#field-configuration').data('action'), {
@@ -168,6 +170,8 @@ window.yourlabs.FormUpdate = function(options) {
                             'field-pk'), formData);
                         $('#field-configuration').data('field-pk', '');
                     }
+
+                    $('#field-configuration .save').removeAttr('disabled');
                 },
             });
         });
@@ -241,6 +245,7 @@ window.yourlabs.FormUpdate = function(options) {
         });
 
         $('#new-tab .save').click(function() {
+            $(this).attr('disabled', 'disabled');
             var verboseName = $('#new-tab input[name=verbose_name]').val();
 
             if (! $.trim(verboseName).length) {
@@ -295,6 +300,7 @@ window.yourlabs.FormUpdate = function(options) {
                     $('#new-tab .error').removeClass('error');
 
                     $('.form-tabs li:not(.new-tab):last a').click();
+                    $('#new-tab .save').removeAttr('disabled');
                 },
             });
         });
