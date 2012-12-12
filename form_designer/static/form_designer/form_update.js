@@ -245,7 +245,6 @@ window.yourlabs.FormUpdate = function(options) {
         });
 
         $('#new-tab .save').click(function() {
-            $(this).attr('disabled', 'disabled');
             var verboseName = $('#new-tab input[name=verbose_name]').val();
 
             if (! $.trim(verboseName).length) {
@@ -258,6 +257,8 @@ window.yourlabs.FormUpdate = function(options) {
                 
                 return;
             }
+            
+            $(this).attr('disabled', 'disabled');
 
             $.ajax(formUpdate.options.tabCreateUrl, {
                 async: false,
