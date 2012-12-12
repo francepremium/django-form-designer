@@ -119,11 +119,6 @@ window.yourlabs.FormUpdate = function(options) {
             }).appendTo(field);
 
             $('<td>', {
-                'class': 'remove',
-                html: '<span class="delete">delete</span>',
-            }).appendTo(field);
-
-            $('<td>', {
                 'class': 'verbose-name',
                 html: formData.verbose_name,
             }).appendTo(field);
@@ -141,6 +136,11 @@ window.yourlabs.FormUpdate = function(options) {
             $('<td>', {
                 'class': 'configuration',
                 html: '<span class="configuration">configuration</span>',
+            }).appendTo(field);
+
+            $('<td>', {
+                'class': 'remove',
+                html: '<span class="remove">delete</span>',
             }).appendTo(field);
 
             return field;

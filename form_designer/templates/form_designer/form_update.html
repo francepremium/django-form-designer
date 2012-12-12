@@ -77,9 +77,6 @@
                             <td class="required">
                                 <input disabled="disabled" type="checkbox" {% if field.required %}checked="checked"{% endif %} />
                             </td>
-                            <td class="remove">
-                                <span>delete</span>
-                            </td>
                             <td class="verbose-name">
                                 {{ field.verbose_name }}
                             </td>
@@ -91,6 +88,9 @@
                             </td>
                             <td class="configuration">
                                 <span class="configuration">configuration</span>
+                            </td>
+                            <td class="remove">
+                                <span>delete</span>
                             </td>
                         </tr>
                         {% endfor %}
