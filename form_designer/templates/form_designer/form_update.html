@@ -102,6 +102,7 @@
     </div>
 
     <div class="outer toolbox">
+        <h2>{% trans 'Toolbox' %}</h2>
         <table>
             {% for widget_class, class in widget_classes.items %}
             <tr class="field {{ widget_class }} new-field" id="new-field-{{ widget_class }}" data-widget-class="{{ widget_class }}">
