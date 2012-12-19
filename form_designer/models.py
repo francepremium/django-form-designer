@@ -265,6 +265,20 @@ def auto_name(sender, instance, **kwargs):
 
     if not instance.name:
         instance.name = slugify(instance.verbose_name).replace('-', '_')
+
+        check = instance.__class__.objects.all()
+
+        if isinstance(instance, Tab):
+            check = check.filter(form=instance.form)
+        elif isinstance(instance, Widget):
+            check = check.filter(tab__form=instance.tab.form)
+
+        if instance.pk:
+            check = instance.__class__.objects.exclude(pk=instance.pk)
+
+        while check.filter(name=instance.name).count():
+            instance.name = instance.name + '_'
+
 signals.pre_save.connect(auto_name)
 
 
