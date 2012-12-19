@@ -24,14 +24,15 @@ class FormCreateForm(forms.ModelForm):
 
 class WidgetForm(forms.ModelForm):
     def save(self, commit=True):
-        order = self.instance.tab.widget_set.aggregate(m=Max('order'))['m']
+        if not self.instance.order:
+            order = self.instance.tab.widget_set.aggregate(m=Max('order'))['m']
 
-        if order:
-            order += 1
-        else:
-            order = 0
+            if order:
+                order += 1
+            else:
+                order = 0
 
-        self.instance.order = order
+            self.instance.order = order
 
         return super(WidgetForm, self).save(commit=commit)
 
