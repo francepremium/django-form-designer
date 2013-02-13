@@ -46,12 +46,12 @@ window.yourlabs.FormUpdate = function(options) {
             }
         });
 
-        $('.modal form').live('submit', function(e) {
+        $('.modal').on('submit', 'form', function(e) {
             e.preventDefault();
             $(this).parents('.modal').find('.save').click();
         });
 
-        $('.modal .cancel').live('click', function() {
+        $('.modal').on('click', '.cancel', function() {
             $(this).parents('.modal').find('.close').click();
         });
 
@@ -176,7 +176,7 @@ window.yourlabs.FormUpdate = function(options) {
             });
         });
 
-        $('.field .configuration').live('click', function() {
+        $('.field').on('click', '.configuration', function() {
             var pk = $(this).parents('tr').attr('data-pk');
 
             var url = formUpdate.options.widgetUpdateUrl;
@@ -200,7 +200,7 @@ window.yourlabs.FormUpdate = function(options) {
             });
         });
 
-        $('.field .remove').live('click', function() {
+        $('.field').on('click', '.remove', function() {
             var row = $(this).parents('tr');
 
             $('#delete-field').data('field-pk', row.attr('data-pk'));
@@ -306,7 +306,7 @@ window.yourlabs.FormUpdate = function(options) {
             });
         });
 
-        $('.form-tabs .remove').live('click', function() {
+        $('.form-tabs').on('click', '.remove', function() {
             var data = $(this).parents('li').data('form-tab');
             $('#delete-tab .tab-name').html(data.verbose_name);
             $('#delete-tab').data('tab-pk', data.pk);
@@ -329,7 +329,7 @@ window.yourlabs.FormUpdate = function(options) {
             });
         });
 
-        $('.form-tabs .name').live('focusout', function() {
+        $('.form-tabs').on('focusout', '.name', function() {
             var data = $(this).parents('li').data('form-tab');
             $.post(formUpdate.options.tabUpdateUrl, {
                 pk: data.pk,
