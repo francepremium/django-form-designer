@@ -1,0 +1,145 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-02-13 15:54+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: models.py:184
+msgid "Short text input"
+msgstr "Texte court"
+
+#: models.py:185
+msgid "Short text inputs"
+msgstr "Textes courts"
+
+#: models.py:201
+msgid "Integer input"
+msgstr "Nombre entier"
+
+#: models.py:202
+msgid "Integer inputs"
+msgstr "Nombres entiers"
+
+#: models.py:222
+msgid "Decimal input"
+msgstr "Nombre décimal"
+
+#: models.py:223
+msgid "Decimal inputs"
+msgstr "Nombres décimaux"
+
+#: models.py:231
+msgid "Long text input"
+msgstr "Texte long"
+
+#: models.py:232
+msgid "Long text inputs"
+msgstr "Textes longs"
+
+#: models.py:240
+msgid "Email input"
+msgstr "Courriel"
+
+#: models.py:241
+msgid "Email inputs"
+msgstr "Courriels"
+
+#: models.py:249
+msgid "Checkbox input"
+msgstr "Case à cocher"
+
+#: models.py:250
+msgid "Checkbox inputs"
+msgstr "Cases à cocher"
+
+#: models.py:258
+msgid "Choice select"
+msgstr "Selection de choix"
+
+#: models.py:259
+msgid "Choice selects"
+msgstr "Selections de choix"
+
+#: templates/form_designer/form_create.html:6
+msgid "Create form"
+msgstr "Créer formulaire"
+
+#: templates/form_designer/form_create.html:10
+msgid "Submit"
+msgstr "Valider"
+
+#: templates/form_designer/form_update.html:105
+msgid "Toolbox"
+msgstr "Boite à outils"
+
+#: templates/form_designer/form_update.html:123
+msgid "Form field configuration"
+msgstr "Configuration du champs"
+
+#: templates/form_designer/form_update.html:130
+#: templates/form_designer/form_update.html:144
+#: templates/form_designer/form_update.html:166
+#: templates/form_designer/form_update.html:180
+msgid "Cancel"
+msgstr "Annuler"
+
+#: templates/form_designer/form_update.html:131
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: templates/form_designer/form_update.html:138
+msgid "Delete field"
+msgstr "Effacer le champs"
+
+#: templates/form_designer/form_update.html:141
+msgid "Are you sure you want to delete field"
+msgstr "Etes-vous certain de vouloir effacer ce champs"
+
+#: templates/form_designer/form_update.html:145
+#: templates/form_designer/form_update.html:181
+msgid "Delete"
+msgstr "Effacer"
+
+#: templates/form_designer/form_update.html:152
+msgid "Create tab"
+msgstr "Créer onglet"
+
+#: templates/form_designer/form_update.html:156
+msgid "Title"
+msgstr "Titre"
+
+#: templates/form_designer/form_update.html:159
+msgid "Type the tab title here"
+msgstr "Saisissez le nom de l'onglet ici"
+
+#: templates/form_designer/form_update.html:160
+msgid ""
+"You will then be able to change it by clicking on the tab title in the form "
+"editor."
+msgstr "Vous pourrez le changer par la suite en cliquant sur le titre de l'onglet dans l'éditeur de formulaire"
+
+#: templates/form_designer/form_update.html:167
+msgid "Create"
+msgstr "Créer"
+
+#: templates/form_designer/form_update.html:174
+msgid "Delete tab"
+msgstr "Effacer l'onglet"
+
+#: templates/form_designer/form_update.html:177
+msgid "Are you sure you want to delete tab"
+msgstr "Etes-vous certain de vouloir effacer cet onglet"
