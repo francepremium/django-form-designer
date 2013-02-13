@@ -32,7 +32,7 @@ class RunTests(Command):
 
 if 'sdist' in sys.argv:
     # clear compiled mo files before building the distribution
-    walk = os.walk(os.path.join(os.getcwd(), 'autocomplete_light/locale'))
+    walk = os.walk(os.path.join(os.getcwd(), 'form_designer/locale'))
     for dirpath, dirnames, filenames in walk:
         if not filenames:
             continue
@@ -48,7 +48,7 @@ else:
         pass
     else:
         dir = os.getcwd()
-        os.chdir(os.path.join(dir, 'autocomplete_light'))
+        os.chdir(os.path.join(dir, 'form_designer'))
         os.system('django-admin.py compilemessages')
         os.chdir(dir)
 
